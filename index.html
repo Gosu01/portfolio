@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- TODO: replace title -->
+<title>Ilyasse Haouazim — Full Stack Web &amp; Mobile Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root{
+  /* colors */
+  --bg:#F0EEE6;
+  --bg-grid-line:#E3E0D4;
+  --text-primary:#141414;
+  --text-muted:#5C5C5C;
+  --text-faint:#8A8A8A;
+  --accent:#3F5FE0;
+  --border:#D9D6CA;
+  --card-bg:transparent;
+  --tag-bg:#E7E4D9;
+
+  /* fonts */
+  --font-heading:'Space Grotesk','General Sans','Neue Montreal','Inter',sans-serif;
+  --font-body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','IBM Plex Mono','Space Mono','Courier New',monospace;
+
+  /* spacing */
+  --space-xs:8px;
+  --space-sm:16px;
+  --space-md:24px;
+  --space-lg:48px;
+  --space-xl:96px;
+  --space-2xl:140px;
+
+  /* layout */
+  --container:1100px;
+  --pad-inline:clamp(20px,5vw,64px);
+  --nav-h:76px;
+  --card-pad:32px;
+  --btn-pad:14px 24px;
+  --tag-pad:4px 12px;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 12px);background:var(--bg)}
+
+body{
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(var(--bg-grid-line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--bg-grid-line) 1px,transparent 1px);
+  background-size:48px 48px;
+  background-position:-1px -1px;
+  color:var(--text-primary);
+  font-family:var(--font-body);
+  font-size:16px;
+  font-weight:400;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--text-primary);text-decoration:none;cursor:pointer}
+
+/* mono base: uppercase + wide tracking */
+.mono,.nav-item,.section-label,.section-meta,.timeline-date,
+.org,.card-links a,.tag,.small-caps,.status-pill,.btn,.foot-text{
+  font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.08em;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);
+  background:rgba(240,238,230,.94);backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:var(--container);margin:0 auto;height:100%;padding:0 var(--pad-inline);
+  display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:var(--font-heading);font-weight:800;font-size:1rem;letter-spacing:-.03em}
+.logo em{font-style:normal;color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links .nav-item{font-size:13px;font-weight:500;color:var(--text-muted);
+  position:relative;padding-bottom:4px;transition:color .2s ease}
+.nav-links .nav-item:hover{color:var(--accent)}
+.nav-item.is-active{color:var(--text-primary)}
+.nav-item.is-active::after{content:'';position:absolute;left:0;right:0;bottom:0;
+  height:1px;background:var(--accent)}
+.nav-cta{font-size:13px;font-weight:500;padding:.55rem 1.25rem;
+  border:1.5px solid var(--text-primary);transition:background .2s ease,color .2s ease}
+.nav-cta:hover{background:var(--text-primary);color:var(--bg)}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+main{max-width:var(--container);margin:0 auto;padding:0 var(--pad-inline)}
+section{border-top:1px solid var(--border);padding:var(--space-2xl) 0;scroll-margin-top:var(--nav-h)}
+.section-head{display:flex;justify-content:space-between;align-items:baseline;
+  gap:1rem;margin-bottom:var(--space-lg)}
+.section-label{font-size:12px;font-weight:500;color:var(--accent);letter-spacing:.08em}
+.section-meta{font-size:12px;color:var(--text-muted)}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  border-top:none;padding:calc(var(--nav-h) + 3rem) 0 4rem;scroll-margin-top:0}
+/* status pill */
+.status-pill{display:inline-flex;align-items:center;gap:8px;margin-bottom:var(--space-md);
+  font-size:12px;font-weight:500;color:var(--text-muted)}
+.status-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);
+  animation:statusPulse 2s infinite}
+@keyframes statusPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.hero h1{font-family:var(--font-heading);font-size:clamp(42px,8vw,96px);line-height:1.05;
+  letter-spacing:-.04em;font-weight:800;margin-bottom:var(--space-md)}
+.hero .role{font-family:var(--font-heading);font-size:clamp(20px,2.6vw,24px);font-weight:700;
+  letter-spacing:-.02em;margin-bottom:var(--space-sm)}
+.hero .tagline{max-width:560px;color:var(--text-muted);line-height:1.7;margin-bottom:var(--space-lg)}
+.btn-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+
+/* buttons */
+.btn{font-family:var(--font-mono);font-size:13px;font-weight:500;text-transform:uppercase;
+  letter-spacing:.05em;padding:var(--btn-pad);display:inline-flex;align-items:center;
+  gap:8px;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease}
+.btn .arr{display:inline-flex;transition:transform .2s ease}
+.btn-solid{background:var(--text-primary);color:var(--bg);border:none}
+.btn-solid:hover{background:var(--text-primary);color:var(--bg)}
+.btn-solid:hover .arr{transform:translateX(4px)}
+.btn-outline{background:transparent;color:var(--text-primary);
+  border:1.5px solid var(--text-primary)}
+.btn-outline:hover{background:var(--text-primary);color:var(--bg)}
+.btn-text{color:var(--text-primary);text-decoration:none;padding:var(--btn-pad);
+  border-bottom:1px solid transparent}
+.btn-text:hover{border-bottom-color:var(--text-primary)}
+
+/* ============================================================
+   PROFILE
+   ============================================================ */
+.profile-statement{font-family:var(--font-heading);font-size:clamp(24px,4.5vw,36px);
+  font-weight:700;line-height:1.15;letter-spacing:-.02em;max-width:780px;margin-bottom:var(--space-md)}
+.profile-bio{max-width:640px;color:var(--text-muted);line-height:1.7}
+
+/* ============================================================
+   SKILLS
+   ============================================================ */
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-lg)}
+.skill-group h3{margin-bottom:var(--space-sm)}
+.small-caps{font-size:12px;font-weight:500;color:var(--text-faint)}
+.skill-group ul{list-style:none}
+.skill-group li{font-size:15px;padding:.32rem 0 .32rem 16px;position:relative;
+  transition:color .2s ease}
+.skill-group li::before{content:'';position:absolute;left:0;top:.7rem;width:6px;height:6px;
+  background:var(--accent);border-radius:1px}
+.skill-group li:hover{color:var(--accent)}
+
+/* ============================================================
+   WORK
+   ============================================================ */
+.work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  border-top:1px solid var(--border);border-left:1px solid var(--border)}
+.card{
+  background:var(--card-bg);border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  border-radius:0;padding:var(--card-pad);display:flex;flex-direction:column;
+  transition:border-color .25s ease;
+}
+.card:hover{border-color:var(--text-primary)}
+.card-num{font-family:var(--font-mono);font-size:12px;color:var(--text-faint);margin-bottom:var(--space-md)}
+.card h3{font-family:var(--font-heading);font-size:22px;font-weight:700;letter-spacing:-.02em;
+  margin-bottom:var(--space-xs)}
+.card p{font-size:15px;color:var(--text-muted);line-height:1.65;margin-bottom:var(--space-md);flex:1}
+.card-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:var(--space-sm)}
+.tag{
+  background:var(--tag-bg);border:1px solid var(--border);border-radius:2px;
+  padding:var(--tag-pad);font-size:11px;letter-spacing:.03em;color:var(--text-muted);
+}
+.card-links{display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--border);
+  padding-top:var(--space-sm)}
+.card-links a{font-size:12px;font-weight:500;color:var(--accent);transition:color .2s ease}
+.card-links a:hover{color:var(--text-primary)}
+.card-links .na{font-size:12px;font-weight:500;color:var(--text-faint);cursor:default}
+.work-loading{font-family:var(--font-mono);font-size:12px;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--text-muted);padding:var(--space-md) 0}
+
+/* ============================================================
+   TIMELINE
+   ============================================================ */
+.timeline-item{display:grid;grid-template-columns:160px 1fr;gap:var(--space-md);
+  padding:var(--space-md) 0;border-bottom:1px solid var(--border)}
+.timeline-item:last-child{border-bottom:none}
+.timeline-date{font-size:12px;color:var(--text-muted);padding-top:.2rem}
+.timeline-body h3{font-family:var(--font-heading);font-size:22px;font-weight:700;
+  letter-spacing:-.02em;margin-bottom:.4rem}
+.timeline-body .org{font-size:12px;font-weight:500;color:var(--accent);margin-bottom:.6rem}
+.timeline-body p{font-size:15px;color:var(--text-muted);line-height:1.7;max-width:640px}
+
+/* ============================================================
+   LANGUAGES + BEYOND CODE
+   ============================================================ */
+.languages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-lg);max-width:640px}
+.level{font-size:16px;color:var(--text-muted)}
+.beyond-list{list-style:none;display:flex;flex-direction:column;gap:var(--space-sm);max-width:640px}
+.beyond-list li{font-size:16px;padding-left:18px;position:relative;color:var(--text-primary)}
+.beyond-list li::before{content:'';position:absolute;left:0;top:.6rem;width:6px;height:6px;background:var(--accent);border-radius:1px}
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact-close{margin-bottom:var(--space-xl)}
+.contact-close .line{display:block;font-family:var(--font-heading);
+  font-size:clamp(30px,6.5vw,56px);font-weight:800;line-height:1.08;letter-spacing:-.03em}
+.contact-close .line.accent{color:var(--text-faint)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-lg) var(--space-md);max-width:640px}
+.contact-cell h4{margin-bottom:var(--space-xs)}
+.contact-cell .value{font-size:18px;font-weight:500;color:var(--text-primary)}
+.contact-cell .value a{border-bottom:1px solid transparent;transition:border .2s ease,color .2s ease}
+.contact-cell .value a:hover{border-bottom-color:var(--accent);color:var(--accent)}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{border-top:1px solid var(--border)}
+.foot-inner{max-width:var(--container);margin:0 auto;padding:var(--space-md) var(--pad-inline);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.foot-text{font-size:12px;color:var(--text-muted)}
+
+/* ============================================================
+   HAMBURGER (mobile)
+   ============================================================ */
+.hamburger{display:none;background:none;border:none;cursor:pointer;width:34px;height:34px;position:relative}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text-primary);position:absolute;
+  left:6px;transition:transform .25s ease,opacity .25s ease,top .25s ease}
+.hamburger span:nth-child(1){top:11px}
+.hamburger span:nth-child(2){top:16px}
+.hamburger span:nth-child(3){top:21px}
+.hamburger.open span:nth-child(1){top:16px;transform:rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){top:16px;transform:rotate(-45deg)}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+/* tablet: 768-1023 */
+@media(min-width:768px) and (max-width:1023px){
+  .skills-grid{grid-template-columns:1fr 1fr}
+  .work-grid{grid-template-columns:1fr 1fr}
+  .languages-grid{grid-template-columns:1fr 1fr}
+}
+/* mobile: <768 */
+@media(max-width:767px){
+  section{padding:64px 0}
+  .hero{padding:calc(var(--nav-h) + 2rem) 0 3rem}
+  .skills-grid{grid-template-columns:1fr}
+  .work-grid{grid-template-columns:1fr}
+  .languages-grid{grid-template-columns:1fr}
+  .timeline-item{grid-template-columns:1fr;gap:var(--space-xs)}
+  .section-head{flex-direction:column;gap:var(--space-xs)}
+  .contact-grid{grid-template-columns:1fr}
+  .card h3{font-size:18px}
+
+  .nav-links{display:flex;flex-direction:column;position:fixed;top:var(--nav-h);
+    left:0;right:0;bottom:0;background:var(--bg);padding:3rem var(--pad-inline);gap:28px;
+    align-items:flex-start;transform:translateX(100%);transition:transform .25s ease;
+    border-top:1px solid var(--border)}
+  .nav-links.open{transform:translateX(0)}
+  .nav-links .nav-item{font-size:15px}
+  .hamburger{display:block}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAV — TODO: replace YOUR_NAME
+     ============================================================ -->
+<nav>
+  <div class="nav-inner">
+    <a href="#top" class="logo">Ilyasse Haouazim<em>.</em></a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a class="nav-item" href="#profile">About</a>
+      <a class="nav-item" href="#skills">Skills</a>
+      <a class="nav-item" href="#work">Work</a>
+      <a class="nav-cta" href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <!-- ============================================================
+       HERO — TODO: status text, name, role, tagline
+       ============================================================ -->
+  <section class="hero" id="top">
+    <span class="status-pill"><span class="dot"></span>&nbsp;Available for select projects</span>
+    <h1>Ilyasse Haouazim</h1>
+    <div class="role">Full Stack Web &amp; Mobile Developer</div>
+    <p class="tagline">
+      I build web and mobile products end to end &mdash; React and Laravel on the web,
+      Spring Boot services behind them, and Flutter apps on iOS and Android.
+    </p>
+    <div class="btn-row">
+      <a class="btn btn-solid" href="#work">View Projects <span class="arr">&rarr;</span></a>
+      <!-- TODO: real GitHub/Demo URLs -->
+      <a class="btn btn-outline" href="https://github.com/El4sse" target="_blank" rel="noopener">View GitHub</a>
+      <a class="btn btn-text" href="#contact">Contact me</a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROFILE — TODO: statement + bio
+       ============================================================ -->
+  <section id="profile">
+    <div class="section-head">
+      <span class="section-label">(A) &mdash; Profile</span>
+      <span class="section-meta">Freelance &mdash; 2023 &ndash; Present</span>
+    </div>
+    <p class="profile-statement">
+      A developer who treats the full stack as one system to keep clean, fast, and maintainable.
+    </p>
+    <p class="profile-bio">
+      Full stack developer with a professional degree in Web &amp; Mobile Engineering, currently
+      freelancing on custom web and mobile applications for car rental, e-commerce and business
+      sites. I own projects from requirements analysis through delivery, working across React.js,
+      Laravel, Spring Boot, Flutter and TypeScript.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       SKILLS — TODO: add/remove skills
+       ============================================================ -->
+  <section id="skills">
+    <div class="section-head">
+      <span class="section-label">(B) &mdash; Capabilities</span>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h3 class="small-caps">Languages</h3>
+        <ul>
+          <li>TypeScript</li><li>JavaScript</li><li>PHP</li>
+          <li>Dart</li><li>SQL</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3 class="small-caps">Web</h3>
+        <ul>
+          <li>HTML5</li><li>CSS3</li><li>Tailwind CSS</li><li>GraphQL</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3 class="small-caps">Frameworks &amp; Libraries</h3>
+        <ul>
+          <li>React.js</li><li>Laravel</li><li>Spring Boot</li><li>HyGraph CMS</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3 class="small-caps">Databases</h3>
+        <ul>
+          <li>MySQL / MariaDB</li><li>MongoDB</li><li>SQL</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3 class="small-caps">Mobile</h3>
+        <ul>
+          <li>Flutter (iOS / Android)</li><li>Android Studio</li><li>Firebase</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3 class="small-caps">Tools &amp; Design</h3>
+        <ul>
+          <li>Git</li><li>Postman</li><li>phpMyAdmin</li>
+          <li>WampServer</li><li>UI/UX</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       (C) — SELECTED WORK
+       Auto-pulled from GitHub. Edit GITHUB_USERNAME + OVERRIDES in
+       the script at the bottom of the file.
+       The 3 static cards below are the offline/fallback set and are
+       replaced by live repos when the GitHub API responds.
+       ============================================================ -->
+  <section id="work">
+    <div class="section-head">
+      <span class="section-label">(C) &mdash; Selected Work</span>
+      <span class="section-meta">GitHub &mdash; most recently updated</span>
+    </div>
+    <div class="work-grid" id="workGrid">
+      <article class="card">
+        <span class="card-num">01</span>
+        <h3>Bghit Nsog</h3>
+        <p>Dual-access car rental platform: customers book vehicles from mobile, agencies manage their fleet from a dedicated interface. Academic project at ENSA Berrechid.</p>
+        <div class="card-tags">
+          <span class="tag">Flutter</span><span class="tag">React.js</span><span class="tag">Spring Boot</span><span class="tag">MariaDB</span>
+        </div>
+        <div class="card-links">
+          <a href="#" target="_blank" rel="noopener">GitHub</a>
+          <a href="#">Live Demo</a>
+        </div>
+      </article>
+      <article class="card">
+        <span class="card-num">02</span>
+        <h3>Car Rental Web Platform</h3>
+        <p>Web application to browse, book and pay for vehicles with real-time availability. Built during the Fullstack Digital Development program.</p>
+        <div class="card-tags">
+          <span class="tag">React.js</span><span class="tag">Tailwind</span><span class="tag">GraphQL</span><span class="tag">HyGraph</span><span class="tag">TypeScript</span>
+        </div>
+        <div class="card-links">
+          <a href="#" target="_blank" rel="noopener">GitHub</a>
+          <a href="#">Live Demo</a>
+        </div>
+      </article>
+      <article class="card">
+        <span class="card-num">03</span>
+        <h3>Freelance Client Applications</h3>
+        <p>Custom web applications delivered for car rental, e-commerce and showcase sites &mdash; from needs analysis to production release.</p>
+        <div class="card-tags">
+          <span class="tag">React.js</span><span class="tag">Laravel</span><span class="tag">Flutter</span><span class="tag">TypeScript</span>
+        </div>
+        <div class="card-links">
+          <a href="#" target="_blank" rel="noopener">GitHub</a>
+          <a href="#">Live Demo</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       EXPERIENCE — TODO: add/remove entries
+       ============================================================ -->
+  <section id="experience">
+    <div class="section-head">
+      <span class="section-label">(D) &mdash; Experience</span>
+    </div>
+
+    <div class="timeline-item">
+      <span class="timeline-date">2025 &mdash; Now</span>
+      <div class="timeline-body">
+        <h3>Web &amp; Mobile Developer</h3>
+        <div class="org">Freelance</div>
+        <p>Design and develop custom web applications across car rental, e-commerce and showcase sites. Drive projects independently from client needs analysis to final delivery, implementing solutions with React.js, Laravel, Flutter and TypeScript.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="timeline-date">Nov 2023 &mdash; Jan 2024</span>
+      <div class="timeline-body">
+        <h3>Web Developer Intern</h3>
+        <div class="org">FSJES A&iuml;n Chock</div>
+        <p>Led the migration of data from a legacy database to a new system and rebuilt the university website to improve features and user experience. Developed with PHP, HTML5, CSS and WampServer, managed MySQL databases via phpMyAdmin, and integrated PMB documentary information services.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="timeline-date">Mar 2023 &mdash; Apr 2023</span>
+      <div class="timeline-body">
+        <h3>Full Stack / Mobile Intern</h3>
+        <div class="org">SNRT</div>
+        <p>Built the interface of an iOS/Android mobile application with Dart and Flutter, integrated Google Firebase for user data across web and mobile, collaborated through Git for version control and task tracking, and tested builds in Android Studio.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       EDUCATION — TODO: add/remove entries
+       ============================================================ -->
+  <section id="education">
+    <div class="section-head">
+      <span class="section-label">(E) &mdash; Education</span>
+    </div>
+
+    <div class="timeline-item">
+      <span class="timeline-date">2023 &mdash; 2024</span>
+      <div class="timeline-body">
+        <h3>Professional Bachelor in Web &amp; Mobile Engineering</h3>
+        <div class="org">&Eacute;cole Nationale des Sciences Appliqu&eacute;es, Berrechid</div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="timeline-date">2021 &mdash; 2023</span>
+      <div class="timeline-body">
+        <h3>Specialized Technician Diploma, Digital Development &mdash; Fullstack</h3>
+        <div class="org">Institut Sp&eacute;cialis&eacute; de Technologie Appliqu&eacute;e NTIC, Casablanca</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       (F) — LANGUAGES
+       ============================================================ -->
+  <section id="languages">
+    <div class="section-head">
+      <span class="section-label">(F) &mdash; Languages</span>
+    </div>
+    <div class="languages-grid">
+      <div class="skill-group">
+        <h3 class="small-caps">French</h3>
+        <p class="level">Fluent</p>
+      </div>
+      <div class="skill-group">
+        <h3 class="small-caps">English</h3>
+        <p class="level">Intermediate</p>
+      </div>
+      <div class="skill-group">
+        <h3 class="small-caps">Arabic</h3>
+        <p class="level">Native</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       (G) — BEYOND CODE
+       ============================================================ -->
+  <section id="beyond">
+    <div class="section-head">
+      <span class="section-label">(G) &mdash; Beyond Code</span>
+    </div>
+    <p class="profile-statement">Outside the stack.</p>
+    <ul class="beyond-list">
+      <li>Passionate about automobiles and motorcycles</li>
+      <li>Graphic design</li>
+      <li>Sports</li>
+    </ul>
+  </section>
+
+  <!-- ============================================================
+       (H) — CONTACT
+       ============================================================ -->
+  <section id="contact">
+    <div class="section-head">
+      <span class="section-label">(H) &mdash; Contact</span>
+    </div>
+    <div class="contact-close">
+      <span class="line">Let's build</span>
+      <span class="line">something</span>
+      <span class="line accent">that lasts.</span>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-cell">
+        <h4 class="small-caps">Email</h4>
+        <div class="value"><a href="mailto:Haouazimilyasse6@gmail.com">Haouazimilyasse6@gmail.com</a></div>
+      </div>
+      <div class="contact-cell">
+        <h4 class="small-caps">Phone</h4>
+        <div class="value"><a href="tel:+212608298361">+212 608 29 83 61</a></div>
+      </div>
+      <div class="contact-cell">
+        <h4 class="small-caps">GitHub</h4>
+        <div class="value"><a href="https://github.com/El4sse" target="_blank" rel="noopener">github.com/El4sse</a></div>
+      </div>
+      <div class="contact-cell">
+        <h4 class="small-caps">LinkedIn</h4>
+        <div class="value"><a href="https://linkedin.com/in/ilyasse-haouazim" target="_blank" rel="noopener">linkedin.com/in/ilyasse-haouazim</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============================================================
+     FOOTER — TODO: year, name, location
+     ============================================================ -->
+<footer>
+  <div class="foot-inner">
+    <span class="foot-text">&copy; 2026 Ilyasse Haouazim</span>
+    <span class="foot-text">Casablanca, Morocco</span>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   NAV + SCROLL-SPY
+   ================================================================ */
+const hamburger=document.getElementById('hamburger');
+const navLinks=document.getElementById('navLinks');
+const closeNav=()=>{navLinks.classList.remove('open');hamburger.classList.remove('open');hamburger.setAttribute('aria-expanded','false')};
+hamburger.addEventListener('click',()=>{
+  const open=navLinks.classList.toggle('open');
+  hamburger.classList.toggle('open',open);
+  hamburger.setAttribute('aria-expanded',open);
+});
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeNav));
+
+const navItems=document.querySelectorAll('.nav-item');
+const sections=document.querySelectorAll('main section[id]');
+const spy=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    navItems.forEach(l=>l.classList.remove('is-active'));
+    const el=document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+    if(el)el.classList.add('is-active');
+  });
+},{rootMargin:'-40% 0px -55% 0px'});
+sections.forEach(s=>spy.observe(s));
+window.addEventListener('scroll',()=>{
+  if(window.scrollY<200)navItems.forEach(l=>l.classList.remove('is-active'));
+});
+
+/* ================================================================
+   (C) SELECTED WORK — AUTO-FETCH FROM GITHUB
+   ================================================================
+
+   HOW TO SET UP:
+   1. Replace YOUR_GITHUB_USERNAME below with your real username.
+   2. Edit OVERRIDES to customise any repo's title, description,
+      or tags, or set hide:true to exclude a specific repo.
+   3. Edit EXCLUDE to hard-skip repos by name.
+   4. If you leave the username as YOUR_GITHUB_USERNAME the page
+      falls back to the 3 static project cards you already have.
+*/
+
+const GITHUB_USERNAME = 'El4sse'; // ← replace this
+
+// Per-repo overrides  (key = repo name as shown on GitHub)
+// title      — override the auto-formatted name
+// description — override the repo description
+// tags       — override the language / tag list
+// demo       — set a specific demo URL (overrides homepage)
+// hide       — true to skip this repo entirely
+const OVERRIDES = {
+  'recipes_book': { description: 'Laravel school project — full-stack recipe management application built with Laravel and PHP.' },
+  'goals-tracker': { description: 'Goal tracking application built with JavaScript.' },
+  'finza-ai-finance-tracker': { description: 'AI-powered personal finance tracker — budgets, expenses, and insights.' },
+  'clothing-store': { description: 'Full-stack clothing e-commerce store with React, Express, Supabase and Stripe.' },
+  'Mini-Projects-js': { description: 'Collection of small JavaScript projects and experiments.' },
+  'saving': { description: 'Simple HTML savings tracking page.' },
+  'portfolio': { title: 'Portfolio Site', description: 'This portfolio website — vanilla HTML/CSS/JS with GitHub API integration.' },
+};
+
+// Hard-exclude repos by name
+const EXCLUDE = [
+  // 'test-repo',
+  // '.github',
+];
+
+const MAX_REPOS = 12;
+
+// ---- helpers ----
+
+function formatTitle(name) {
+  return name
+    .replace(/[-_]/g, ' ')
+    .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+async function fetchLanguages(repo) {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_USERNAME}/${repo.name}/languages`,
+      { headers: { 'Accept': 'application/vnd.github+json' } }
+    );
+    if (!res.ok) return repo.language ? [repo.language] : [];
+    const data = await res.json();
+    const top = Object.entries(data)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([l]) => l);
+    return top.length ? top : repo.language ? [repo.language] : [];
+  } catch {
+    return repo.language ? [repo.language] : [];
+  }
+}
+
+function cardHTML(repo, idx, tags) {
+  const override = OVERRIDES[repo.name] || {};
+  const title = override.title || formatTitle(repo.name);
+  const desc =
+    override.description ||
+    repo.description ||
+    `${title} — see the GitHub README for details.`;
+  const demo = override.demo || repo.homepage;
+  const hasDemo = demo && /^https?:/.test(demo);
+  const tagList = (override.tags || tags || [repo.language]).filter(Boolean);
+
+  return `
+    <article class="card">
+      <span class="card-num">${String(idx + 1).padStart(2, '0')}</span>
+      <h3>${title}</h3>
+      <p>${desc}</p>
+      <div class="card-tags">
+        ${tagList.map(t => `<span class="tag">${t}</span>`).join('')}
+      </div>
+      <div class="card-links">
+        <a href="${repo.html_url}" target="_blank" rel="noopener">GitHub</a>
+        ${hasDemo
+          ? `<a href="${demo}" target="_blank" rel="noopener">Live Demo</a>`
+          : `<span class="na">Demo not specified</span>`}
+      </div>
+    </article>`;
+}
+
+// ---- main ----
+
+(function loadWorkFromGitHub() {
+  // Skip entirely if username is still the placeholder
+  if (GITHUB_USERNAME === 'YOUR_GITHUB_USERNAME') return;
+
+  const grid = document.getElementById('workGrid');
+
+  fetch(
+    `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=pushed&per_page=100&type=owner`,
+    { headers: { 'Accept': 'application/vnd.github+json' } }
+  )
+    .then(r => {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    })
+    .then(async repos => {
+      const filtered = repos
+        .filter(r => !r.fork && r.size > 0 && r.language !== 'Markdown')
+        .filter(r => !EXCLUDE.includes(r.name))
+        .filter(r => !(OVERRIDES[r.name] && OVERRIDES[r.name].hide))
+        .slice(0, MAX_REPOS);
+
+      if (!filtered.length) return;
+
+      // Fetch language lists in parallel (batch of ≤6 = 6 extra calls)
+      const langPromises = filtered.map(r => fetchLanguages(r));
+      const langResults = await Promise.all(langPromises);
+
+      grid.innerHTML = filtered
+        .map((r, i) => cardHTML(r, i, langResults[i]))
+        .join('');
+    })
+    .catch(() => {
+      // On error: keep the static fallback cards already in the DOM
+    });
+})();
+</script>
+</script>
+</body>
+</html>
