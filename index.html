@@ -696,6 +696,33 @@ const EXCLUDE = [
 const MAX_REPOS = 12;
 const INITIAL_VISIBLE = 3;
 
+// Embedded dataset — rendered immediately so the list (and "View More")
+// never depends on the GitHub API. Live API refresh happens in the
+// background. Add new public repos here to keep the fallback current.
+const FALLBACK_REPOS = [
+  { name: 'portfolio', html_url: 'https://github.com/Gosu01/portfolio', homepage: null,
+    description: 'This portfolio website — vanilla HTML/CSS/JS with GitHub API integration.',
+    tags: ['HTML', 'CSS', 'JavaScript'] },
+  { name: 'recipes_book', html_url: 'https://github.com/Gosu01/recipes_book', homepage: null,
+    description: 'Laravel school project — full-stack recipe management application built with Laravel and PHP.',
+    tags: ['Laravel', 'PHP'] },
+  { name: 'saving', html_url: 'https://github.com/Gosu01/saving', homepage: null,
+    description: 'Simple HTML savings tracking page.',
+    tags: ['HTML', 'CSS', 'JavaScript'] },
+  { name: 'Mini-Projects-js', html_url: 'https://github.com/Gosu01/Mini-Projects-js', homepage: null,
+    description: 'Collection of small JavaScript projects and experiments.',
+    tags: ['JavaScript'] },
+  { name: 'goals-tracker', html_url: 'https://github.com/Gosu01/goals-tracker', homepage: null,
+    description: 'Goal tracking application built with JavaScript.',
+    tags: ['JavaScript'] },
+  { name: 'finza-ai-finance-tracker', html_url: 'https://github.com/Gosu01/finza-ai-finance-tracker', homepage: null,
+    description: 'AI-powered personal finance tracker — budgets, expenses, and insights.',
+    tags: ['JavaScript'] },
+  { name: 'clothing-store', html_url: 'https://github.com/Gosu01/clothing-store', homepage: null,
+    description: 'Full-stack clothing e-commerce store with React, Express, Supabase and Stripe.',
+    tags: ['React', 'Express', 'Supabase', 'Stripe'] },
+];
+
 // ---- helpers ----
 
 function formatTitle(name) {
@@ -752,12 +779,43 @@ function cardHTML(repo, idx, tags) {
 
 // ---- main ----
 
+function renderCards(list) {
+  const grid = document.getElementById('workGrid');
+  const moreWrap = document.getElementById('viewMoreWrap');
+  const btn = document.getElementById('viewMoreBtn');
+
+  grid.innerHTML = list.map((r, i) => cardHTML(r, i, r.tags)).join('');
+
+  if (list.length <= INITIAL_VISIBLE) {
+    moreWrap.hidden = true;
+    return;
+  }
+  moreWrap.hidden = false;
+  const cards = [...grid.querySelectorAll('.card')];
+  const hiddenCards = cards.slice(INITIAL_VISIBLE);
+  const collapse = () => {
+    hiddenCards.forEach(c => c.classList.add('is-hidden'));
+    btn.innerHTML = 'View All Projects <span class="arr">&darr;</span>';
+    btn.setAttribute('aria-expanded', 'false');
+  };
+  const expand = () => {
+    hiddenCards.forEach(c => c.classList.remove('is-hidden'));
+    btn.innerHTML = 'View Less <span class="arr">&uarr;</span>';
+    btn.setAttribute('aria-expanded', 'true');
+  };
+  collapse();
+  btn.onclick = () => (btn.getAttribute('aria-expanded') === 'true' ? collapse() : expand());
+}
+
 (function loadWorkFromGitHub() {
   // Skip entirely if username is still the placeholder
   if (GITHUB_USERNAME === 'YOUR_GITHUB_USERNAME') return;
 
-  const grid = document.getElementById('workGrid');
+  // Render instantly from the embedded dataset — works offline and
+  // under API rate limits (the button always appears when >3 repos).
+  renderCards(FALLBACK_REPOS.slice(0, MAX_REPOS));
 
+  // Then try to refresh from GitHub in the background.
   fetch(
     `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=pushed&per_page=100&type=owner`,
     { headers: { 'Accept': 'application/vnd.github+json' } }
@@ -775,41 +833,23 @@ function cardHTML(repo, idx, tags) {
 
       if (!filtered.length) return;
 
-      // Fetch language lists in parallel (batch of ≤6 = 6 extra calls)
-      const langPromises = filtered.map(r => fetchLanguages(r));
-      const langResults = await Promise.all(langPromises);
+      // Reuse embedded tags where possible; only hit the languages API
+      // for repos we have never seen (keeps requests minimal).
+      const tags = await Promise.all(filtered.map(async r => {
+        const known = FALLBACK_REPOS.find(f => f.name === r.name);
+        return known && known.tags ? known.tags : await fetchLanguages(r);
+      }));
 
-      grid.innerHTML = filtered
-        .map((r, i) => cardHTML(r, i, langResults[i]))
-        .join('');
-
-      const moreWrap = document.getElementById('viewMoreWrap');
-      if (filtered.length > INITIAL_VISIBLE) {
-        moreWrap.hidden = false;
-        const cards = [...grid.querySelectorAll('.card')];
-        const hiddenCards = cards.slice(INITIAL_VISIBLE);
-        const btn = document.getElementById('viewMoreBtn');
-        const collapsedLabel = 'View All Projects <span class="arr">&darr;</span>';
-        const expandedLabel = 'View Less <span class="arr">&uarr;</span>';
-        const expand = () => {
-          hiddenCards.forEach(c => c.classList.remove('is-hidden'));
-          btn.innerHTML = expandedLabel;
-          btn.setAttribute('aria-expanded', 'true');
-        };
-        const collapse = () => {
-          hiddenCards.forEach(c => c.classList.add('is-hidden'));
-          btn.innerHTML = collapsedLabel;
-          btn.setAttribute('aria-expanded', 'false');
-        };
-        collapse();
-        btn.addEventListener('click', () => {
-          const expanded = btn.getAttribute('aria-expanded') === 'true';
-          expanded ? collapse() : expand();
-        });
-      }
+      renderCards(filtered.map((r, i) => ({
+        name: r.name,
+        html_url: r.html_url,
+        homepage: r.homepage,
+        description: r.description,
+        tags: tags[i],
+      })));
     })
     .catch(() => {
-      // On error: keep the static fallback cards already in the DOM
+      // Keep the embedded dataset already rendered.
     });
 })();
 </script>
