@@ -280,9 +280,9 @@ footer{border-top:1px solid var(--border)}
 @keyframes vtIris{from{clip-path:circle(0 at var(--toggle-x,50%) var(--toggle-y,50%))}
   to{clip-path:circle(150% at var(--toggle-x,50%) var(--toggle-y,50%))}}
 /* scroll-reveal (only when JS is available; see script) */
-.js .reveal{opacity:0;transform:translateY(16px);
-  transition:opacity var(--dur-base) var(--ease-out),transform var(--dur-base) var(--ease-out)}
-.js .reveal.in{opacity:1;transform:none}
+.js .reveal{clip-path:inset(0 0 100% 0);
+  transition:clip-path var(--dur-base) var(--ease-out)}
+.js .reveal.in{clip-path:inset(0 0 0 0)}
 /* stagger siblings inside grids */
 .js .skills-grid>.skill-group:nth-child(2){transition-delay:.04s}
 .js .skills-grid>.skill-group:nth-child(3){transition-delay:.08s}
@@ -315,7 +315,7 @@ footer{border-top:1px solid var(--border)}
 
 /* respect reduced-motion */
 @media (prefers-reduced-motion:reduce){
-  .js .reveal{opacity:1;transform:none;transition:none}
+  .js .reveal{clip-path:none;transition:none}
   .js .hero>*{opacity:1;animation:none}
   .nav-links .nav-item::before{transition:none}
   .card,.skill-group li{transition:none}
