@@ -787,12 +787,24 @@ function cardHTML(repo, idx, tags) {
       if (filtered.length > INITIAL_VISIBLE) {
         moreWrap.hidden = false;
         const cards = [...grid.querySelectorAll('.card')];
-        cards.slice(INITIAL_VISIBLE).forEach(c => c.classList.add('is-hidden'));
+        const hiddenCards = cards.slice(INITIAL_VISIBLE);
         const btn = document.getElementById('viewMoreBtn');
+        const collapsedLabel = 'View All Projects <span class="arr">&darr;</span>';
+        const expandedLabel = 'View Less <span class="arr">&uarr;</span>';
+        const expand = () => {
+          hiddenCards.forEach(c => c.classList.remove('is-hidden'));
+          btn.innerHTML = expandedLabel;
+          btn.setAttribute('aria-expanded', 'true');
+        };
+        const collapse = () => {
+          hiddenCards.forEach(c => c.classList.add('is-hidden'));
+          btn.innerHTML = collapsedLabel;
+          btn.setAttribute('aria-expanded', 'false');
+        };
+        collapse();
         btn.addEventListener('click', () => {
-          cards.forEach(c => c.classList.remove('is-hidden'));
-          moreWrap.hidden = true;
-          btn.remove();
+          const expanded = btn.getAttribute('aria-expanded') === 'true';
+          expanded ? collapse() : expand();
         });
       }
     })
