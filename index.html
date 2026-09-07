@@ -257,6 +257,9 @@ footer{border-top:1px solid var(--border)}
 /* ============================================================
    ANIMATIONS
    ============================================================ */
+/* theme-change transition (class added only during a toggle) */
+html.theme-anim,html.theme-anim *{
+  transition:background-color .35s ease,color .35s ease,border-color .35s ease,fill .35s ease !important}
 /* scroll-reveal (only when JS is available; see script) */
 .js .reveal{opacity:0;transform:translateY(24px);
   transition:opacity .6s ease,transform .6s ease}
@@ -713,8 +716,11 @@ function renderThemeIcon(){
   themeToggle.setAttribute('aria-label',dark?'Switch to light theme':'Switch to dark theme');
 }
 themeToggle.addEventListener('click',()=>{
-  const next=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';
-  document.documentElement.setAttribute('data-theme',next);
+  const root=document.documentElement;
+  const next=root.getAttribute('data-theme')==='light'?'dark':'light';
+  root.classList.add('theme-anim');
+  root.setAttribute('data-theme',next);
+  setTimeout(()=>root.classList.remove('theme-anim'),400);
   try{localStorage.setItem('theme',next)}catch(e){}
   renderThemeIcon();
 });
