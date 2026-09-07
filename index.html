@@ -263,6 +263,16 @@ footer{border-top:1px solid var(--border)}
 /* ============================================================
    ANIMATIONS — one ease-out curve, modest travel, no scroll work
    ============================================================ */
+/* scroll progress — thin accent bar along the top */
+.scroll-progress{position:fixed;top:0;left:0;height:2px;width:100%;
+  background:var(--accent);transform:scaleX(0);transform-origin:left;
+  z-index:300;pointer-events:none}
+
+/* theme change — wipe the current page out, new theme slides in */
+::view-transition-old(root){animation:vtOut var(--dur-slow) var(--ease-out) both}
+::view-transition-new(root){animation:vtIn var(--dur-slow) var(--ease-out) both}
+@keyframes vtOut{to{opacity:0;transform:translateY(-24px)}}
+@keyframes vtIn{from{opacity:0;transform:translateY(24px)}}
 /* scroll-reveal (only when JS is available; see script) */
 .js .reveal{opacity:0;transform:translateY(16px);
   transition:opacity var(--dur-base) var(--ease-out),transform var(--dur-base) var(--ease-out)}
@@ -303,6 +313,7 @@ footer{border-top:1px solid var(--border)}
   .js .hero>*{opacity:1;animation:none}
   .nav-links .nav-item::before{transition:none}
   .card,.skill-group li{transition:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
 }
 
 /* ============================================================
@@ -359,6 +370,7 @@ footer{border-top:1px solid var(--border)}
 <!-- ============================================================
      NAV — TODO: replace YOUR_NAME
      ============================================================ -->
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 <nav>
   <div class="nav-inner">
     <a href="#top" class="logo">Ilyasse Haouazim<em>.</em></a>
@@ -697,6 +709,11 @@ window.addEventListener('scroll',()=>{
    (throttled to one layout pass per frame)
    ================================================================ */
 const revealSel='.section-head,.card,.skill-group,.timeline-item,.languages-grid>*,.beyond-list,.contact-cell,.contact-close';
+const progressBar=document.getElementById('scrollProgress');
+function renderProgress(){
+  const max=document.documentElement.scrollHeight-innerHeight;
+  progressBar.style.transform='scaleX('+(max>0?Math.min(scrollY/max,1):0)+')';
+}
 const revealInView=(function(){
   let ticking=false;
   return function(){
@@ -712,6 +729,7 @@ const revealInView=(function(){
           if(el.getBoundingClientRect().top<innerHeight*.95)el.classList.add('in');
         }
       });
+      renderProgress();
       ticking=false;
     });
   };
