@@ -6,7 +6,7 @@
 <!-- TODO: replace title -->
 <title>Ilyasse Haouazim — Full Stack Web &amp; Mobile Developer</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230C0C0C'/%3E%3Ctext x='32' y='46' font-family='Arial,Helvetica,sans-serif' font-size='44' font-weight='700' fill='%23E8913A' text-anchor='middle'%3Ei.%3C/text%3E%3C/svg%3E">
-<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark')}catch(e){}</script>
+<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark')}catch(e){}document.documentElement.classList.add('js')</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -176,7 +176,7 @@ section{border-top:1px solid var(--border);padding:var(--space-2xl) 0;scroll-mar
 .small-caps{font-size:12px;font-weight:500;color:var(--text-faint)}
 .skill-group ul{list-style:none}
 .skill-group li{font-size:15px;padding:.32rem 0 .32rem 16px;position:relative;
-  transition:color .2s ease}
+  transition:color .2s ease,transform .2s ease}
 .skill-group li::before{content:'';position:absolute;left:0;top:.7rem;width:6px;height:6px;
   background:var(--accent);border-radius:1px}
 .skill-group li:hover{color:var(--accent)}
@@ -189,7 +189,7 @@ section{border-top:1px solid var(--border);padding:var(--space-2xl) 0;scroll-mar
 .card{
   background:var(--card-bg);border-right:1px solid var(--border);border-bottom:1px solid var(--border);
   border-radius:0;padding:var(--card-pad);display:flex;flex-direction:column;
-  transition:border-color .25s ease;
+  transition:border-color .25s ease,transform .25s ease;
 }
 .card:hover{border-color:var(--text-primary)}
 .card-num{font-family:var(--font-mono);font-size:12px;color:var(--text-faint);margin-bottom:var(--space-md)}
@@ -253,6 +253,51 @@ footer{border-top:1px solid var(--border)}
 .foot-inner{max-width:var(--container);margin:0 auto;padding:var(--space-md) var(--pad-inline);
   display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .foot-text{font-size:12px;color:var(--text-muted)}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+/* scroll-reveal (only when JS is available; see script) */
+.js .reveal{opacity:0;transform:translateY(24px);
+  transition:opacity .6s ease,transform .6s ease}
+.js .reveal.in{opacity:1;transform:none}
+/* stagger siblings inside grids */
+.js .skills-grid>.skill-group:nth-child(2){transition-delay:.05s}
+.js .skills-grid>.skill-group:nth-child(3){transition-delay:.10s}
+.js .skills-grid>.skill-group:nth-child(4){transition-delay:.15s}
+.js .skills-grid>.skill-group:nth-child(5){transition-delay:.20s}
+.js .skills-grid>.skill-group:nth-child(6){transition-delay:.25s}
+.js .work-grid>.card:nth-child(2){transition-delay:.08s}
+.js .work-grid>.card:nth-child(3){transition-delay:.16s}
+.js .work-grid>.card:nth-child(4){transition-delay:.24s}
+
+/* hero entrance */
+.js .hero>*{opacity:0;animation:fadeUp .7s ease forwards}
+.js .hero>*:nth-child(2){animation-delay:.08s}
+.js .hero>*:nth-child(3){animation-delay:.16s}
+.js .hero>*:nth-child(4){animation-delay:.24s}
+.js .hero>*:nth-child(5){animation-delay:.32s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* nav underline grow on hover */
+.nav-links .nav-item::before{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:var(--accent);transform:scaleX(0);transform-origin:left;
+  transition:transform .25s ease}
+.nav-links .nav-item:hover::before{transform:scaleX(1)}
+
+/* card hover lift */
+.js .card.in:hover{transform:translateY(-4px)}
+
+/* skill row nudge */
+.skill-group li:hover{transform:translateX(4px)}
+
+/* respect reduced-motion */
+@media (prefers-reduced-motion:reduce){
+  .js .reveal{opacity:1;transform:none;transition:none}
+  .js .hero>*{opacity:1;animation:none}
+  .nav-links .nav-item::before{transition:none}
+  .card,.skill-group li{transition:none}
+}
 
 /* ============================================================
    HAMBURGER (mobile)
@@ -642,6 +687,21 @@ window.addEventListener('scroll',()=>{
 });
 
 /* ================================================================
+   SCROLL-REVEAL — fade sections in as they enter the viewport
+   ================================================================ */
+const revealSel='.section-head,.card,.skill-group,.timeline-item,.languages-grid>*,.beyond-list,.contact-cell,.contact-close';
+function revealInView(){
+  document.querySelectorAll(revealSel).forEach(el=>{
+    if(el.classList.contains('reveal')){if(!el.classList.contains('in')&&el.getBoundingClientRect().top<innerHeight*.92)el.classList.add('in');return;}
+    el.classList.add('reveal');
+    if(el.getBoundingClientRect().top<innerHeight*.92)el.classList.add('in');
+  });
+}
+window.addEventListener('scroll',revealInView,{passive:true});
+window.addEventListener('resize',revealInView);
+revealInView();
+
+/* ================================================================
    THEME TOGGLE — light / dark, persisted
    ================================================================ */
 const themeToggle=document.getElementById('themeToggle');
@@ -789,6 +849,7 @@ function renderCards(list) {
   const btn = document.getElementById('viewMoreBtn');
 
   grid.innerHTML = list.map((r, i) => cardHTML(r, i, r.tags)).join('');
+  revealInView();
 
   if (list.length <= INITIAL_VISIBLE) {
     moreWrap.hidden = true;
