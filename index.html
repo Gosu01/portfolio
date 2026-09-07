@@ -288,12 +288,14 @@ footer{border-top:1px solid var(--border)}
   .contact-grid{grid-template-columns:1fr}
   .card h3{font-size:18px}
 
+  nav{-webkit-backdrop-filter:none !important;backdrop-filter:none !important;background:var(--bg)}
   .nav-links{display:flex;flex-direction:column;position:fixed;top:var(--nav-h);
-    left:0;right:0;bottom:0;background:var(--bg);padding:3rem var(--pad-inline);gap:28px;
+    left:0;right:0;bottom:0;padding:3rem var(--pad-inline);gap:28px;
     align-items:flex-start;transform:translateX(100%);transition:transform .25s ease;
     border-top:1px solid var(--border);
+    background:var(--bg);background-color:var(--bg);background-image:none;
     -webkit-backdrop-filter:none !important;backdrop-filter:none !important;
-    -webkit-background-clip:padding-box;background-clip:padding-box}
+    z-index:101;opacity:1;visibility:visible}
   .nav-links.open{transform:translateX(0)}
   .nav-links .nav-item{font-size:15px}
   .hamburger{display:block}
