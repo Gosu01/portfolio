@@ -6,7 +6,7 @@
 <!-- TODO: replace title -->
 <title>Ilyasse Haouazim — Full Stack Web &amp; Mobile Developer</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230C0C0C'/%3E%3Ctext x='32' y='46' font-family='Arial,Helvetica,sans-serif' font-size='44' font-weight='700' fill='%23E8913A' text-anchor='middle'%3Ei.%3C/text%3E%3C/svg%3E">
-<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark')}catch(e){}document.documentElement.classList.add('js')</script>
+<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'light')}catch(e){}document.documentElement.classList.add('js')</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -257,9 +257,6 @@ footer{border-top:1px solid var(--border)}
 /* ============================================================
    ANIMATIONS
    ============================================================ */
-/* theme-change transition (class added only during a toggle) */
-html.theme-anim,html.theme-anim *{
-  transition:background-color .35s ease,color .35s ease,border-color .35s ease,fill .35s ease !important}
 /* scroll-reveal (only when JS is available; see script) */
 .js .reveal{opacity:0;transform:translateY(24px);
   transition:opacity .6s ease,transform .6s ease}
@@ -718,11 +715,16 @@ function renderThemeIcon(){
 themeToggle.addEventListener('click',()=>{
   const root=document.documentElement;
   const next=root.getAttribute('data-theme')==='light'?'dark':'light';
-  root.classList.add('theme-anim');
-  root.setAttribute('data-theme',next);
-  setTimeout(()=>root.classList.remove('theme-anim'),400);
+  if(root.classList.contains('theme-fade'))return;   // debounce mid-animation
+  root.classList.add('theme-fade');
+  const apply=()=>{root.setAttribute('data-theme',next);renderThemeIcon()};
+  if(document.startViewTransition){
+    document.startViewTransition(apply);
+  }else{
+    apply();
+  }
+  setTimeout(()=>root.classList.remove('theme-fade'),450);
   try{localStorage.setItem('theme',next)}catch(e){}
-  renderThemeIcon();
 });
 renderThemeIcon();
 
