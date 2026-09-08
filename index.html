@@ -469,7 +469,7 @@ footer{border-top:1px solid var(--border)}
       <div class="skill-group">
         <h3 class="small-caps">Databases</h3>
         <ul>
-          <li>MySQL / MariaDB</li><li>MongoDB</li><li>SQL</li>
+          <li>MySQL / MariaDB</li><li>PostgreSQL / Supabase</li><li>MongoDB</li><li>SQL</li>
         </ul>
       </div>
       <div class="skill-group">
@@ -804,6 +804,8 @@ const GITHUB_USERNAME = 'Gosu01'; // your GitHub username
 // demo       — set a specific demo URL (overrides homepage)
 // hide       — true to skip this repo entirely
 const OVERRIDES = {
+  'VemoCar_RentalAgency': { title: 'VemoCar Rental Agency', description: 'Vehicle browsing, bookings, coupons and admin panel. Full-stack rental agency — React + Node.js.', tags: ['TypeScript', 'React', 'Node.js'] },
+  'BghitNsog_RentalCar_MobileApplication': { title: 'Bghit Nsog Mobile', description: 'Dual-access car rental platform: mobile booking + agency fleet management. Flutter + Spring Boot. ENSA Berrechid.', tags: ['Flutter', 'Dart', 'Spring Boot'] },
   'recipes_book': { description: 'Laravel school project — full-stack recipe management application built with Laravel and PHP.' },
   'goals-tracker': { description: 'Goal tracking application built with JavaScript.' },
   'finza-ai-finance-tracker': { description: 'AI-powered personal finance tracker — budgets, expenses, and insights.' },
@@ -826,6 +828,12 @@ const INITIAL_VISIBLE = 3;
 // never depends on the GitHub API. Live API refresh happens in the
 // background. Add new public repos here to keep the fallback current.
 const FALLBACK_REPOS = [
+  { name: 'VemoCar_RentalAgency', html_url: 'https://github.com/Gosu01/VemoCar_RentalAgency', homepage: null,
+    description: 'Vehicle browsing, bookings, coupons and admin panel. Full-stack rental agency.',
+    tags: ['TypeScript', 'React', 'Node.js'] },
+  { name: 'BghitNsog_RentalCar_MobileApplication', html_url: 'https://github.com/Gosu01/BghitNsog_RentalCar_MobileApplication', homepage: null,
+    description: 'Dual-access car rental platform: mobile booking + agency fleet management. Flutter + Spring Boot.',
+    tags: ['Flutter', 'Dart', 'Spring Boot'] },
   { name: 'portfolio', html_url: 'https://github.com/Gosu01/portfolio', homepage: null,
     description: 'This portfolio website — vanilla HTML/CSS/JS with GitHub API integration.',
     tags: ['HTML', 'CSS', 'JavaScript'] },
